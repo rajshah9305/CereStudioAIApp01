@@ -60,10 +60,12 @@ jobs:
         REACT_APP_VERSION: ${{ secrets.REACT_APP_VERSION }}
         REACT_APP_ENVIRONMENT: ${{ secrets.REACT_APP_ENVIRONMENT }}
     
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
+    
     - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod' 
+      run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} 
