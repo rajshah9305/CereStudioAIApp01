@@ -84,7 +84,7 @@ const uploadFileToBackend = async (file) => {
   // Change this URL to your production backend when deploying
   const response = await fetch('http://localhost:5000/api/upload', {
     method: 'POST',
-    body: formData,
+    body: formData
   });
 
   if (!response.ok) {
