@@ -76,6 +76,23 @@ const studioConfigs = {
   }
 };
 
+// Helper function to upload a file to the backend
+const uploadFileToBackend = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  // Change this URL to your production backend when deploying
+  const response = await fetch('http://localhost:5000/api/upload', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('File upload failed');
+  }
+  return response.json();
+};
+
 export default function Studio() {
   const [searchParams] = useSearchParams();
   const studioType = searchParams.get('type') || 'text';
@@ -94,30 +111,24 @@ export default function Studio() {
   const [errors, setErrors] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const readFileContent = async (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target.result);
-      reader.onerror = reject;
-      
-      if (file.type.startsWith('text/') || file.name.endsWith('.md') || file.name.endsWith('.json') || file.name.endsWith('.xml') || file.name.endsWith('.csv')) {
-        reader.readAsText(file);
-      } else {
-        // For binary files like PDFs, we'll just note that content extraction isn't available
-        resolve('File content extraction not available for this file type.');
-      }
-    });
-  };
-
+  // Actual file upload handler
   const handleFilesChange = async (newFiles) => {
     if (newFiles) {
-      const filesWithContent = await Promise.all(
-        newFiles.map(async (file) => ({
-          ...file,
-          content: await readFileContent(file)
-        }))
-      );
-      setUploadedFiles(filesWithContent);
+      try {
+        // Upload each file to the backend
+        const uploadResults = await Promise.all(
+          newFiles.map(file => uploadFileToBackend(file))
+        );
+        // Store uploaded file info (e.g., URLs) in state
+        setUploadedFiles(uploadResults.map(result => ({
+          name: result.file.originalname,
+          size: result.file.size,
+          url: result.file.url,
+          mimetype: result.file.mimetype
+        })));
+      } catch (error) {
+        alert('File upload failed: ' + error.message);
+      }
     } else {
       setUploadedFiles([]);
     }
@@ -163,7 +174,7 @@ export default function Studio() {
         content: prompt,
         generated_text: generatedContent,
         created_by: 'demo@cerebras.studio',
-        files: uploadedFiles.map(f => ({ name: f.name, size: f.size }))
+        files: uploadedFiles.map(f => ({ name: f.name, size: f.size, url: f.url }))
       });
       localStorage.setItem('app-toast', 'Project saved successfully!');
     } catch (error) {
@@ -301,4 +312,4 @@ export default function Studio() {
       </div>
     </div>
   );
-} 
+}
