@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "cerestudio-ai-app",
   "builds": [
     {
       "src": "package.json",
@@ -27,4 +28,4 @@
       "dest": "/index.html"
     }
   ]
-} 
+}
