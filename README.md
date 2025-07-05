@@ -139,18 +139,62 @@ docker run -p 80:80 cerebras-studio
 
 ## 🚀 Deployment
 
-### Vercel
-1. Connect your repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
+### Option 1: Vercel (Recommended)
 
-### Netlify
-1. Connect your repository to Netlify
-2. Set build command: `npm run build`
-3. Set publish directory: `build`
-4. Configure environment variables
+#### Automatic Deployment from GitHub
 
-### Manual Deployment
+1. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign in with your GitHub account
+   - Click "New Project"
+   - Import your GitHub repository: `rajshah9305/CereStudioAIApp01`
+
+2. **Configure Environment Variables**
+   In Vercel dashboard, go to Settings → Environment Variables and add:
+   ```
+   REACT_APP_CEREBRAS_API_KEY=your_cerebras_api_key
+   REACT_APP_API_URL=https://api.cerebras.ai/v1/chat/completions
+   REACT_APP_APP_NAME=CereStudio AI
+   REACT_APP_VERSION=1.0.0
+   REACT_APP_ENVIRONMENT=production
+   ```
+
+3. **Deploy**
+   - Vercel will automatically deploy on every push to `main` branch
+   - Your app will be available at: `https://your-project-name.vercel.app`
+
+#### Manual Deployment
+
+1. **Install Vercel CLI**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+### Option 2: GitHub Actions CI/CD
+
+The repository includes a GitHub Actions workflow that automatically:
+- Runs tests and linting
+- Builds the application
+- Deploys to Vercel on push to `main` branch
+
+#### Setup GitHub Secrets
+
+In your GitHub repository, go to Settings → Secrets and add:
+- `VERCEL_TOKEN`: Your Vercel API token
+- `VERCEL_ORG_ID`: Your Vercel organization ID
+- `VERCEL_PROJECT_ID`: Your Vercel project ID
+- `REACT_APP_CEREBRAS_API_KEY`: Your Cerebras API key
+- `REACT_APP_API_URL`: Cerebras API URL
+- `REACT_APP_APP_NAME`: App name
+- `REACT_APP_VERSION`: App version
+- `REACT_APP_ENVIRONMENT`: Environment (production)
+
+### Option 3: Manual Deployment
 1. Run `npm run build`
 2. Upload the `build/` folder to your web server
 3. Configure your server to serve `index.html` for all routes

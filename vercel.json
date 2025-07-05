@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "name": "cerestudio-ai-app",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_API_URL": "@react_app_api_url",
+    "REACT_APP_CEREBRAS_API_KEY": "@react_app_cerebras_api_key",
+    "REACT_APP_APP_NAME": "@react_app_app_name",
+    "REACT_APP_VERSION": "@react_app_version",
+    "REACT_APP_ENVIRONMENT": "@react_app_environment"
+  },
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+} 
