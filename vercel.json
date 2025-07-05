@@ -34,10 +34,5 @@
     "REACT_APP_APP_NAME": "@react_app_app_name",
     "REACT_APP_VERSION": "@react_app_version",
     "REACT_APP_ENVIRONMENT": "@react_app_environment"
-  },
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
   }
-} 
+}
