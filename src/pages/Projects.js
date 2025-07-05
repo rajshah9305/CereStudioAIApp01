@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -38,26 +38,7 @@ export default function Projects() {
   const [selectedStudio, setSelectedStudio] = useState('all');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
-  useEffect(() => {
-    filterProjects();
-  }, [projects, searchTerm, selectedStudio]);
-
-  const loadProjects = async () => {
-    try {
-      const projectList = await CreativeProject.list();
-      setProjects(projectList);
-    } catch (error) {
-      console.error('Failed to load projects:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filterProjects = () => {
+  const filterProjects = useCallback(() => {
     let filtered = projects;
 
     // Filter by search term
@@ -74,6 +55,25 @@ export default function Projects() {
     }
 
     setFilteredProjects(filtered);
+  }, [projects, searchTerm, selectedStudio]);
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  useEffect(() => {
+    filterProjects();
+  }, [filterProjects]);
+
+  const loadProjects = async () => {
+    try {
+      const projectList = await CreativeProject.list();
+      setProjects(projectList);
+    } catch (error) {
+      console.error('Failed to load projects:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (projectId) => {
