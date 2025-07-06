@@ -1,4 +1,5 @@
-const API_BASE_URL = localStorage.getItem('apiUrl') || process.env.REACT_APP_API_URL || 'https://api.cerebras.ai/v1/chat/completions';
+const API_BASE_URL_RAW = localStorage.getItem('apiUrl') || process.env.REACT_APP_API_URL || 'https://api.cerebras.ai/v1';
+const API_BASE_URL = API_BASE_URL_RAW.endsWith('/chat/completions') ? API_BASE_URL_RAW : `${API_BASE_URL_RAW.replace(/\/$/, '')}/chat/completions`;
 const API_KEY = localStorage.getItem('apiKey') || process.env.REACT_APP_CEREBRAS_API_KEY;
 
 class APIError extends Error {
